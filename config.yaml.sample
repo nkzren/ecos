@@ -1,1 +1,5 @@
-period: 10s
+kube:
+    confPath: '/root/.kube/config'
+
+scheduler:
+    interval: '5s'
