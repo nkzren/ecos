@@ -19,6 +19,8 @@ type SchedulerConf struct {
 	Interval string
 }
 
+var C Configurations
+
 func Setup() Configurations {
 	viper.AutomaticEnv()
 	viper.SetConfigName("config")
@@ -35,4 +37,8 @@ func Setup() Configurations {
 		fmt.Printf("Unable to decode config: %s", err)
 	}
 	return c
+}
+
+func init() {
+	C = Setup()
 }

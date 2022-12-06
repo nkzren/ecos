@@ -42,7 +42,7 @@ func setup() (chan os.Signal, chan bool, config.Configurations) {
 	sigs := make(chan os.Signal, 1)
 	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
 	done := make(chan bool, 1)
-	config := config.Setup()
+	config := config.C
 	return sigs, done, config
 }
 
