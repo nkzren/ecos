@@ -19,9 +19,9 @@ type SchedulerConf struct {
 	Interval string
 }
 
-var C Configurations
+var Root Configurations
 
-func Setup() Configurations {
+func setup() Configurations {
 	viper.AutomaticEnv()
 	viper.SetConfigName("config")
 	viper.AddConfigPath(".")
@@ -40,5 +40,5 @@ func Setup() Configurations {
 }
 
 func init() {
-	C = Setup()
+	Root = setup()
 }

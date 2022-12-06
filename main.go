@@ -10,6 +10,7 @@ import (
 	"github.com/go-co-op/gocron"
 	"github.com/nkzren/ecoscheduler/config"
 	"github.com/nkzren/ecoscheduler/kube"
+	"github.com/nkzren/ecoscheduler/score"
 )
 
 func main() {
@@ -17,7 +18,7 @@ func main() {
 	defer waitForExit(sigs, done)
 
 	go startScheduling(config.Scheduler, func() {
-		getNodes(config.Kube)
+		labelNodes(config.Kube)
 	})
 }
 
@@ -27,10 +28,17 @@ func startScheduling(c config.SchedulerConf, task func()) {
 	s.StartAsync()
 }
 
-func getNodes(kubeConf config.KubeConf) {
-	nodes, err := kube.GetNodes(kubeConf)
+func labelNodes(kubeConf config.KubeConf) {
+	nodes, err := kube.GetNodes()
 	for _, node := range nodes.Items {
-		fmt.Println(node.Name)
+		label := node.Labels["ecos"]
+		if label == "" {
+			fmt.Printf("Ecos' label not found for node (%s), setting to neutral", node.Name)
+			kube.UpdateLabel(&node, "neutral")
+		} else {
+			result := score.GetResult("weather")
+			kube.UpdateLabel(&node, result)
+		}
 	}
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "error: %v\n", err)
@@ -42,7 +50,7 @@ func setup() (chan os.Signal, chan bool, config.Configurations) {
 	sigs := make(chan os.Signal, 1)
 	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
 	done := make(chan bool, 1)
-	config := config.C
+	config := config.Root
 	return sigs, done, config
 }
 
