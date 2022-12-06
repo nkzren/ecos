@@ -1,0 +1,6 @@
+kube:
+  confPath: '/home/renan/.kube/config'
+
+scheduler:
+  interval: '3s'
+
