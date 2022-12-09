@@ -7,8 +7,9 @@ import (
 )
 
 type Configurations struct {
-	Kube      KubeConf
-	Scheduler SchedulerConf
+	Kube       KubeConf
+	Scheduler  SchedulerConf
+	Weatherbit WeatherbitConf
 }
 
 type KubeConf struct {
@@ -17,6 +18,11 @@ type KubeConf struct {
 
 type SchedulerConf struct {
 	Interval string
+}
+
+type WeatherbitConf struct {
+	Path string
+	Key  string
 }
 
 var Root Configurations

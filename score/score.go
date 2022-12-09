@@ -3,6 +3,8 @@ package score
 import (
 	"fmt"
 	"os"
+
+	"github.com/nkzren/ecoscheduler/weather"
 )
 
 // Takes a value between 0 and 100 and returns a label
@@ -20,12 +22,16 @@ func valueToLabel(value int) string {
 	}
 }
 
-func GetResult(scoreType string) string {
+func GetResult(scoreType string, loc weather.Location) string {
 	switch scoreType {
 	case "random":
 		return valueToLabel(randomScore())
 	case "weather":
-		return valueToLabel(weatherScore())
+		result, err := weatherScore(loc)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Could not calculate weather score: %v", err)
+		}
+		return valueToLabel(result)
 	default:
 		fmt.Fprintln(os.Stderr, "Invalid score type")
 		os.Exit(1)

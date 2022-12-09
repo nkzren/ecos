@@ -1,5 +1,9 @@
 kube:
-    confPath: '/root/.kube/config'
+  confPath: '/root/.kube/config'
 
 scheduler:
-    interval: '5s'
+  interval: '5s'
+
+weatherbit:
+  path: "https://api.weatherbit.io/v2.0/current"
+  key: "YOUR_API_KEY"
