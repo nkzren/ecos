@@ -2,6 +2,6 @@ package score
 
 import "math/rand"
 
-func randomScore() int {
-	return rand.Intn(100)
+func randomScore() float64 {
+	return rand.Float64() * 100
 }

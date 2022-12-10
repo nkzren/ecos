@@ -12,7 +12,7 @@ import (
 // 0  <= value < 40   -> bad
 // 40 <= value < 60   -> neutral
 // 60 <= value < 100  -> good
-func valueToLabel(value int) string {
+func valueToLabel(value float64) string {
 	if value < 40 {
 		return "bad"
 	} else if value < 60 {
