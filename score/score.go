@@ -7,15 +7,14 @@ import (
 	"github.com/nkzren/ecoscheduler/weather"
 )
 
-// Takes a value between 0 and 100 and returns a label
 // Higher scores are better for scheduling
-// 0  <= value < 40   -> bad
-// 40 <= value < 60   -> neutral
-// 60 <= value < 100  -> good
+// 0  <= value < 60  -> bad
+// 60 <= value < 100 -> neutral
+// value >= 100		 -> good
 func valueToLabel(value float64) string {
-	if value < 40 {
+	if value < 80 {
 		return "bad"
-	} else if value < 60 {
+	} else if value < 120 {
 		return "neutral"
 	} else {
 		return "good"

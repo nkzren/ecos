@@ -1,9 +1,11 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"os/signal"
+	"sync"
 	"syscall"
 	"time"
 
@@ -11,6 +13,9 @@ import (
 	"github.com/nkzren/ecoscheduler/config"
 	"github.com/nkzren/ecoscheduler/kube"
 	"github.com/nkzren/ecoscheduler/score"
+	"github.com/nkzren/ecoscheduler/weather"
+
+	corev1 "k8s.io/api/core/v1"
 )
 
 func main() {
@@ -30,20 +35,35 @@ func startScheduling(c config.SchedulerConf, task func()) {
 
 func labelNodes(kubeConf config.KubeConf) {
 	nodes, err := kube.GetNodes()
-	for _, node := range nodes.Items {
-		label := node.Labels["ecos"]
-		if label == "" {
-			fmt.Printf("Ecos' label not found for node (%s), setting to neutral", node.Name)
-			kube.UpdateLabel(&node, "neutral")
-		} else {
-			result := score.GetResult("weather")
-			kube.UpdateLabel(&node, result)
-		}
-	}
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "error: %v\n", err)
 		os.Exit(2)
 	}
+
+	var wg sync.WaitGroup
+	wg.Add(len(nodes.Items))
+	for i := 0; i < len(nodes.Items); i++ {
+		go func(i int) {
+			node := nodes.Items[i]
+			label, err := getLabelFor(&node)
+			if err != nil {
+				fmt.Fprintf(os.Stderr, "error: %v\n", err)
+			}
+			kube.UpdateLabel(&node, label)
+			wg.Done()
+		}(i)
+	}
+	wg.Wait()
+}
+
+func getLabelFor(node *corev1.Node) (string, error) {
+	cityLabel := node.Labels["city"]
+	countryLabel := node.Labels["country"]
+	if cityLabel == "" || countryLabel == "" {
+		return "neutral", errors.New(fmt.Sprintf("Location labels missing for node (%s), will set to neutral", node.Name))
+	}
+	result := score.GetResult("weather", weather.Location{City: cityLabel, Country: countryLabel})
+	return result, nil
 }
 
 func setup() (chan os.Signal, chan bool, config.Configurations) {
