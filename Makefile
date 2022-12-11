@@ -9,6 +9,12 @@ setup:
 	@echo "Copy config file"
 	@cp config.yaml.sample config.yaml
 
+.PHONY: cluster-setup
+cluster-setup:
+	@echo "Setting up cluster permissions"
+	@kubectl apply -f kube/samples/rbac.yaml
+	@kubectl create clusterrolebinding ecoscheduler --clusterrole=ecoscheduler --serviceaccount=default:default 2> /dev/null; true
+
 .PHONY: fmt
 fmt:
 	go fmt ./...
