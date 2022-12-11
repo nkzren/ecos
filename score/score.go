@@ -12,9 +12,9 @@ import (
 // 60 <= value < 100 -> neutral
 // value >= 100		 -> good
 func valueToLabel(value float64) string {
-	if value < 80 {
+	if value < 60 {
 		return "bad"
-	} else if value < 120 {
+	} else if value < 100 {
 		return "neutral"
 	} else {
 		return "good"
