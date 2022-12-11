@@ -24,6 +24,7 @@ FROM ubuntu:jammy
 WORKDIR /
 COPY --from=builder /workspace/ecoscheduler .
 
-USER 65532:65532
+# USER 65532:65532
+RUN apt update && apt install -y curl
 
 ENTRYPOINT ["/ecoscheduler"]

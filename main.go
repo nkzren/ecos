@@ -22,6 +22,7 @@ func main() {
 	sigs, done, config := setup()
 	defer waitForExit(sigs, done)
 
+	fmt.Println("Start scheduling for node labeling")
 	go startScheduling(config.Scheduler, func() {
 		labelNodes(config.Kube)
 	})
@@ -49,7 +50,10 @@ func labelNodes(kubeConf config.KubeConf) {
 			if err != nil {
 				fmt.Fprintf(os.Stderr, "error: %v\n", err)
 			}
-			kube.UpdateLabel(&node, label)
+			err = kube.UpdateLabel(&node, label)
+			if err != nil {
+				fmt.Fprintf(os.Stderr, "error: %v\n", err)
+			}
 			wg.Done()
 		}(i)
 	}

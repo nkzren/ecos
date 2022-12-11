@@ -2,33 +2,35 @@ package kube
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"log"
 	"os"
-	"path/filepath"
 
 	"github.com/nkzren/ecoscheduler/config"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
 	typev1 "k8s.io/client-go/kubernetes/typed/core/v1"
+	restclient "k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/clientcmd"
 )
 
 var client typev1.CoreV1Interface
+var kubeConfig config.KubeConf
 
 func init() {
 	var err error
-	client, err = getClient(config.Root.Kube.ConfPath)
+	kubeConfig = config.Root.Kube
+	client, err = getClient()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "error: %v\n", err)
 		os.Exit(1)
 	}
 }
 
-func getClient(cfgPath string) (typev1.CoreV1Interface, error) {
-	kubeconfig := filepath.Clean(cfgPath)
-	config, err := clientcmd.BuildConfigFromFlags("", kubeconfig)
+func getClient() (typev1.CoreV1Interface, error) {
+	config, err := getConfig()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -39,16 +41,23 @@ func getClient(cfgPath string) (typev1.CoreV1Interface, error) {
 	return clientset.CoreV1(), nil
 }
 
-func GetNodes() (*corev1.NodeList, error) {
-	client, err := getClient(config.Root.Kube.ConfPath)
-	if err != nil {
-		return nil, err
+func getConfig() (*restclient.Config, error) {
+	switch kubeConfig.Env {
+	case "dev":
+		return clientcmd.BuildConfigFromFlags("", kubeConfig.ConfPath)
+	case "kube":
+		return clientcmd.BuildConfigFromFlags("", "")
+	default:
+		return nil, errors.New("Invalid kube env")
 	}
+}
+
+func GetNodes() (*corev1.NodeList, error) {
 	return client.Nodes().List(context.Background(), metav1.ListOptions{})
 }
 
 func UpdateLabel(node *corev1.Node, value string) error {
 	node.ObjectMeta.Labels["ecos"] = value
-	client.Nodes().Update(context.Background(), node, metav1.UpdateOptions{})
-	return nil
+	_, err := client.Nodes().Update(context.Background(), node, metav1.UpdateOptions{})
+	return err
 }

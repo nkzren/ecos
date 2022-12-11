@@ -1,4 +1,5 @@
 kube:
+  env: 'dev'
   confPath: '/root/.kube/config'
 
 scheduler:

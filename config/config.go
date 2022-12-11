@@ -13,6 +13,7 @@ type Configurations struct {
 }
 
 type KubeConf struct {
+	Env      string
 	ConfPath string
 }
 
@@ -30,7 +31,7 @@ var Root Configurations
 func setup() Configurations {
 	viper.AutomaticEnv()
 	viper.SetConfigName("config")
-	viper.AddConfigPath(".")
+	viper.AddConfigPath("./config")
 	viper.SetConfigType("yml")
 
 	if err := viper.ReadInConfig(); err != nil {

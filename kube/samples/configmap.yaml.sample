@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ecoscheduler-config
+data:
+  config.yaml: |
+    kube:
+      env: 'kube'
+
+    scheduler:
+      interval: '10s'
+
+    weatherbit:
+      path: "https://api.weatherbit.io/v2.0/current"
+      key: "YOUR_API_KEY"

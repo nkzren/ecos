@@ -28,7 +28,7 @@ func GetResult(scoreType string, loc weather.Location) string {
 	case "weather":
 		result, err := weatherScore(loc)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "Could not calculate weather score: %v", err)
+			fmt.Fprintf(os.Stderr, "Could not calculate weather score: %v\n", err)
 		}
 		return valueToLabel(result)
 	default:
