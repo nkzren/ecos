@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/nkzren/ecoscheduler/weather"
+	"github.com/nkzren/ecos/weather"
 )
 
 // Higher scores are better for scheduling

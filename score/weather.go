@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/nkzren/ecoscheduler/weather"
+	"github.com/nkzren/ecos/weather"
 )
 
 func weatherScore(loc weather.Location) (float64, error) {

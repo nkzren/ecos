@@ -1,4 +1,4 @@
-module github.com/nkzren/ecoscheduler
+module github.com/nkzren/ecos
 
 go 1.19
 

@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/nkzren/ecoscheduler/config"
+	"github.com/nkzren/ecos/config"
 )
 
 type Location struct {

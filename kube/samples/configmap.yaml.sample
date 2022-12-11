@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: ecoscheduler-config
+  name: ecos-config
 data:
   config.yaml: |
     kube:

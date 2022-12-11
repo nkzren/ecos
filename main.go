@@ -10,10 +10,10 @@ import (
 	"time"
 
 	"github.com/go-co-op/gocron"
-	"github.com/nkzren/ecoscheduler/config"
-	"github.com/nkzren/ecoscheduler/kube"
-	"github.com/nkzren/ecoscheduler/score"
-	"github.com/nkzren/ecoscheduler/weather"
+	"github.com/nkzren/ecos/config"
+	"github.com/nkzren/ecos/kube"
+	"github.com/nkzren/ecos/score"
+	"github.com/nkzren/ecos/weather"
 
 	corev1 "k8s.io/api/core/v1"
 )

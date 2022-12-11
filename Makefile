@@ -1,4 +1,4 @@
-IMAGE_TAG_BASE ?= nkzren/ecoscheduler
+IMAGE_TAG_BASE ?= nkzren/ecos
 VERSION ?= latest
 
 .PHONY: release
@@ -13,7 +13,7 @@ setup:
 cluster-setup:
 	@echo "Setting up cluster permissions"
 	@kubectl apply -f kube/samples/rbac.yaml
-	@kubectl create clusterrolebinding ecoscheduler --clusterrole=ecoscheduler --serviceaccount=default:default 2> /dev/null; true
+	@kubectl create clusterrolebinding ecos --clusterrole=ecos --serviceaccount=default:default 2> /dev/null; true
 
 .PHONY: fmt
 fmt:
@@ -37,4 +37,4 @@ clean:
 
 .PHONY: run
 run: build
-	@./ecoscheduler
+	@./ecos
