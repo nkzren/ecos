@@ -6,3 +6,6 @@ rules:
 - apiGroups: [""]
   resources: ["nodes"]
   verbs: ["get", "watch", "list", "update"]
+- apiGroups: ["apps"]
+  resources: ["deployment"]
+  verbs: ["get", "watch", "list", "update"]
