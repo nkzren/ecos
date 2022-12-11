@@ -24,7 +24,6 @@ FROM ubuntu:jammy
 WORKDIR /
 COPY --from=builder /workspace/ecos .
 
-# USER 65532:65532
-RUN apt update && apt install -y curl
+USER 65532:65532
 
 ENTRYPOINT ["/ecos"]

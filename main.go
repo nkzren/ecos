@@ -21,7 +21,6 @@ import (
 
 	"github.com/go-co-op/gocron"
 	"github.com/nkzren/ecos/config"
-	"github.com/nkzren/ecos/controllers"
 	"github.com/nkzren/ecos/kube"
 	"github.com/nkzren/ecos/score"
 	"github.com/nkzren/ecos/weather"
@@ -78,7 +77,7 @@ func startController() {
 		os.Exit(1)
 	}
 
-	if err = (&controllers.DeploymentReconciler{
+	if err = (&kube.DeploymentReconciler{
 		Client: mgr.GetClient(),
 		Scheme: mgr.GetScheme(),
 	}).SetupWithManager(mgr); err != nil {

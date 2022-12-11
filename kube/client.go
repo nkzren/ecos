@@ -16,13 +16,13 @@ import (
 	"k8s.io/client-go/tools/clientcmd"
 )
 
-var client typev1.CoreV1Interface
+var kubeClient typev1.CoreV1Interface
 var kubeConfig config.KubeConf
 
 func init() {
 	var err error
 	kubeConfig = config.Root.Kube
-	client, err = getClient()
+	kubeClient, err = getClient()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "error: %v\n", err)
 		os.Exit(1)
@@ -53,11 +53,11 @@ func getConfig() (*restclient.Config, error) {
 }
 
 func GetNodes() (*corev1.NodeList, error) {
-	return client.Nodes().List(context.Background(), metav1.ListOptions{})
+	return kubeClient.Nodes().List(context.Background(), metav1.ListOptions{})
 }
 
 func UpdateLabel(node *corev1.Node, value string) error {
 	node.ObjectMeta.Labels["ecos"] = value
-	_, err := client.Nodes().Update(context.Background(), node, metav1.UpdateOptions{})
+	_, err := kubeClient.Nodes().Update(context.Background(), node, metav1.UpdateOptions{})
 	return err
 }
